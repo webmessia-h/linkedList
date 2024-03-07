@@ -21,7 +21,11 @@ public:
 
     void insert(L data, int index);
 
+    void eraseAt(int index);
+
     void pop_front();
+
+    void pop_back();
 
     void clear();
 
@@ -52,18 +56,6 @@ List<L>::List() {
     size = 0;
     head = nullptr;
 };
-
-// delete the front element of a list
-template<typename L>
-void List<L>::pop_front() {
-    Node<L> *temp = head;
-
-    head = head->pNext;
-
-    delete temp;
-
-    size--;
-}
 
 // add element to the front of the list
 template<typename L>
@@ -102,10 +94,45 @@ void List<L>::insert(L data, int index) {
         for (int i = 0; i < index - 1; i++)
             previous = previous->pNext;
 
-        Node<L> *newNode = new Node<L>(data, previous->pNext);
-        previous->pNext = newNode;
+        previous->pNext = new Node<L>(data, previous->pNext);
         size++;
     }
+}
+
+// erase element at given index
+template<typename L>
+void List<L>::eraseAt(int index) {
+    if (index == 0)
+        pop_front();
+    else {
+        Node<L> *previous = this->head;
+
+        for (int i = 0; i < index - 1; i++)
+            previous = previous->pNext;
+
+        Node<L> *toDelete = previous->pNext;
+        previous->pNext = toDelete->pNext;
+        delete toDelete;
+        size--;
+    }
+}
+
+// delete the front element of a list
+template<typename L>
+void List<L>::pop_front() {
+    Node<L> *temp = head;
+
+    head = head->pNext;
+
+    delete temp;
+
+    size--;
+}
+
+// delete element at the back of a list
+template<typename L>
+void List<L>::pop_back() {
+    eraseAt(size - 1);
 }
 
 // reuse pop_front to delete all elements of list
@@ -144,7 +171,7 @@ List<L>::~List() {
 int main() {
     List<int> lst;
 
-// idk maybe there is some better way to do this, but I'll keep it for some time
+// idk maybe there is a better way to do this, but I'll keep it for some time
 #ifdef DEBUG
     int length;
     std::cout<< "choose length(size) of list: ";
@@ -156,15 +183,14 @@ int main() {
        std::cout<< lst[i] <<'\t';
     std::cout<< "size:" << lst.getSize() <<std::endl;
 
-    std::cout<< "pop_front()" <<std::endl;
-    lst.pop_front();
-
+    std::cout<< "push_front()" <<std::endl;
+    lst.push_front(11);
     for (int i = 0; i < lst.getSize(); i++)
         std::cout<< lst[i] <<'\t';
     std::cout<< "size:" << lst.getSize() <<std::endl;
 
-    std::cout<< "push_front()" <<std::endl;
-    lst.push_front(11);
+    std::cout<< "push_back()" <<std::endl;
+    lst.push_back(1);
     for (int i = 0; i < lst.getSize(); i++)
         std::cout<< lst[i] <<'\t';
     std::cout<< "size:" << lst.getSize() <<std::endl;
@@ -175,7 +201,25 @@ int main() {
         std::cout<< lst[i] <<'\t';
     std::cout<< "size:" << lst.getSize() <<std::endl;
 
-    std::cout<< "clear" <<'\t';
+    std::cout<< "eraseAt()" <<std::endl;
+    lst.eraseAt(1);
+    for (int i = 0; i < lst.getSize(); i++)
+        std::cout<< lst[i] <<'\t';
+    std::cout<< "size:" << lst.getSize() <<std::endl;
+
+    std::cout<< "pop_front()" <<std::endl;
+    lst.pop_front();
+    for (int i = 0; i < lst.getSize(); i++)
+        std::cout<< lst[i] <<'\t';
+    std::cout<< "size:" << lst.getSize() <<std::endl;
+
+    std::cout<< "pop_back()" <<std::endl;
+    lst.pop_back();
+    for (int i = 0; i < lst.getSize(); i++)
+        std::cout<< lst[i] <<'\t';
+    std::cout<< "size:" << lst.getSize() <<std::endl;
+
+    std::cout<< "clear()" <<'\t';
     lst.clear();
     std::cout<< "size:" << lst.getSize() <<std::endl;
 #endif
