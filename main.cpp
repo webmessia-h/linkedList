@@ -51,6 +51,7 @@ List<L>::List() {
 // delete the front element of a list
 template<typename L>
 void List<L>::pop_front() {
+    
     Node<L> *temp = head;
 
     head = head->pNext;
@@ -63,7 +64,6 @@ void List<L>::pop_front() {
 // add element to the back of the list
 template<typename L>
 void List<L>::push_back(L data) {
-
     if (head == nullptr)
     {
         head = new Node<L>(data);
@@ -115,7 +115,7 @@ List<L>::~List() {
 int main() {
     List<int> lst;
 
-// idk maybe there is some better way to do this, but I'll keep it for some time
+// idk maybe there is a better way to do this, but I'll keep it for some time
 #ifdef DEBUG
     int length;
     std::cin >> length;
