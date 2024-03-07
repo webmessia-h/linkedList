@@ -15,7 +15,11 @@ public:
 
     int getSize() { return size; }
 
+    void push_front(L data);
+
     void push_back(L data);
+
+    void insert(L data, int index);
 
     void pop_front();
 
@@ -41,6 +45,7 @@ private:
     Node<L> *head;
 };
 
+
 // constructor
 template<typename L>
 List<L>::List() {
@@ -51,7 +56,6 @@ List<L>::List() {
 // delete the front element of a list
 template<typename L>
 void List<L>::pop_front() {
-    
     Node<L> *temp = head;
 
     head = head->pNext;
@@ -61,9 +65,17 @@ void List<L>::pop_front() {
     size--;
 }
 
+// add element to the front of the list
+template<typename L>
+void List<L>::push_front(L data) {
+    head = new Node<L>(data, head);
+    size++;
+}
+
 // add element to the back of the list
 template<typename L>
 void List<L>::push_back(L data) {
+
     if (head == nullptr)
     {
         head = new Node<L>(data);
@@ -77,6 +89,23 @@ void List<L>::push_back(L data) {
     }
 
     size++;
+}
+
+// insert element at given index
+template<typename L>
+void List<L>::insert(L data, int index) {
+    if (index == 0)
+        push_front(data);
+    else {
+        Node<L> *previous = this->head;
+
+        for (int i = 0; i < index - 1; i++)
+            previous = previous->pNext;
+
+        Node<L> *newNode = new Node<L>(data, previous->pNext);
+        previous->pNext = newNode;
+        size++;
+    }
 }
 
 // reuse pop_front to delete all elements of list
@@ -115,9 +144,10 @@ List<L>::~List() {
 int main() {
     List<int> lst;
 
-// idk maybe there is a better way to do this, but I'll keep it for some time
+// idk maybe there is some better way to do this, but I'll keep it for some time
 #ifdef DEBUG
     int length;
+    std::cout<< "choose length(size) of list: ";
     std::cin >> length;
     for (size_t i = 0; i < length; i++)
         lst.push_back(rand()%10);
@@ -133,7 +163,19 @@ int main() {
         std::cout<< lst[i] <<'\t';
     std::cout<< "size:" << lst.getSize() <<std::endl;
 
-    std::cout<< "lst.clear" <<std::endl;
+    std::cout<< "push_front()" <<std::endl;
+    lst.push_front(11);
+    for (int i = 0; i < lst.getSize(); i++)
+        std::cout<< lst[i] <<'\t';
+    std::cout<< "size:" << lst.getSize() <<std::endl;
+
+    std::cout<< "insert()" <<std::endl;
+    lst.insert(12,1);
+    for (int i = 0; i < lst.getSize(); i++)
+        std::cout<< lst[i] <<'\t';
+    std::cout<< "size:" << lst.getSize() <<std::endl;
+
+    std::cout<< "clear" <<'\t';
     lst.clear();
     std::cout<< "size:" << lst.getSize() <<std::endl;
 #endif
