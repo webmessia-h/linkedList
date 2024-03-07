@@ -1,19 +1,28 @@
 #include <iostream>
+#define DEBUG
+// delete the line above to disable debug mode
 
+// first in last out
 template<typename L>
 class List
 {
 public:
+
     List();
     ~List();
 
     L& operator[](const int index);
 
-    int getSize() {return size;}
+    int getSize() { return size; }
 
     void push_back(L data);
 
+    void pop_front();
+
+    void clear();
+
 private:
+
     template<typename N>
     class Node
     {
@@ -32,6 +41,54 @@ private:
     Node<L> *head;
 };
 
+// constructor
+template<typename L>
+List<L>::List() {
+    size = 0;
+    head = nullptr;
+};
+
+// delete the front element of a list
+template<typename L>
+void List<L>::pop_front() {
+    Node<L> *temp = head;
+
+    head = head->pNext;
+
+    delete temp;
+
+    size--;
+}
+
+// add element to the back of the list
+template<typename L>
+void List<L>::push_back(L data) {
+
+    if (head == nullptr)
+    {
+        head = new Node<L>(data);
+    }
+    else {
+        Node<L> *current = this->head;
+        while (current->pNext != nullptr) {
+            current = current->pNext;
+        }
+        current->pNext = new Node<L>(data);
+    }
+
+    size++;
+}
+
+// reuse pop_front to delete all elements of list
+template<typename L>
+void List<L>::clear() {
+    while (size)
+    {
+        pop_front();
+    }
+}
+
+// overloading of [ ] operator to access list elements (nodes) via index
 template<typename L>
 L &List<L>::operator[](const int index) {
     int counter = 0;
@@ -48,51 +105,38 @@ L &List<L>::operator[](const int index) {
     }
 }
 
-template<typename L>
-void List<L>::push_back(L data) {
-
-    if (head == nullptr)
-    {
-        head = new Node<L>(data);
-    }
-    else {
-        Node<L> *current = this->head;
-        while (current->pNext != nullptr) {
-            current = current->pNext;
-        }
-        current->pNext = new Node<L>(data);
-        size++;
-    }
-}
-
-template<typename L>
-List<L>::List() {
-    size = 0;
-    head = nullptr;
-};
-
+// just destructor
 template<typename L>
 List<L>::~List() {
-
+    clear();
 };
+
 
 int main() {
     List<int> lst;
 
-    // lst.push_back(5);
+// idk maybe there is some better way to do this, but I'll keep it for some time
+#ifdef DEBUG
+    int length;
+    std::cin >> length;
+    for (size_t i = 0; i < length; i++)
+        lst.push_back(rand()%10);
 
-    // std::cout<< lst[2] <<std::endl;
+    for (int i = 0; i < lst.getSize(); i++)
+       std::cout<< lst[i] <<'\t';
+    std::cout<< "size:" << lst.getSize() <<std::endl;
 
+    std::cout<< "pop_front()" <<std::endl;
+    lst.pop_front();
 
+    for (int i = 0; i < lst.getSize(); i++)
+        std::cout<< lst[i] <<'\t';
+    std::cout<< "size:" << lst.getSize() <<std::endl;
 
-    int size = 0;
-    std::cin >> size;
-    for (size_t i = 0; i < size; i++)
-        lst.push_back(rand()%51);
-
-    for (int i = 0; i <= lst.getSize(); i++)
-       std::cout<< lst[i] <<std::endl;
-
-    std::cout<< "size:" << lst.getSize() + 1 <<std::endl;
-   return 0;
+    std::cout<< "lst.clear" <<std::endl;
+    lst.clear();
+    std::cout<< "size:" << lst.getSize() <<std::endl;
+#endif
+    // see you, space cowboy
+    return 0;
 }
