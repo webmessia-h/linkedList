@@ -2,7 +2,6 @@
 #define DEBUG
 // delete the line above to disable debug mode
 
-// first in last out
 template<typename L>
 class List
 {
